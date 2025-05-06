@@ -4,6 +4,8 @@
   import CreateRoom from './lib/CreateRoom.svelte';
   import { currentRoom } from './roomStore';
   import WaitingRoom from './lib/WaitingRoom.svelte';
+  import { users, allUsersReady } from './usersStore';
+  import Question from './lib/Question.svelte';
 
   $socket.on("connect", () => {
     console.log(`Connected with id: ${$socket.id}`);
@@ -18,11 +20,11 @@
 <main>
   {#if $currentRoom === ""}
     <CreateRoom />
-
     <JoinRoom />
-
-  {:else}
+  {:else if $allUsersReady == false}
     <WaitingRoom />
+  {:else}
+    <Question />
   {/if}
 </main>
 

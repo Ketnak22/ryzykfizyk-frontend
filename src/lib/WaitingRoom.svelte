@@ -1,6 +1,6 @@
 <script lang="ts">
     import { socket } from "../socketStore";
-    import { users } from "../usersStore";
+    import { users, allUsersReady } from "../usersStore";
     import { currentRoom } from "../roomStore";
     import type { Question, User } from "../interfaces";
     
@@ -36,15 +36,12 @@
         $users = [...$users] // Force Svelte to rerender
     }
 
+    // TODO: Przenieść do App.svelte i usunąć z roomStore.ts
     // When all users are ready
     $socket.on("all-users-ready", () => {
-        alert("All users are ready!");
-        // TODO: Odliczanie/przejście do gry
+        // alert("All users are ready!");
+        $allUsersReady = true;
     })
-
-    // $socket.emit("get-questions", (questions: Question) => {
-    //     console.log(questions)
-    // })
 </script>
 
 <div class="waiting-room">
@@ -56,7 +53,7 @@
         <ol>
             {#each $users as user}
                 <li class={user.ready ? "ready" : "not-ready"}>
-                    {user.username}
+                    <span>{user.username}</span>
                 </li>
             {/each}
         </ol>
@@ -121,24 +118,26 @@
         display: flex;
         align-items: center;
         justify-content: center;
-
         height: 100px;
-        width: max-content;
-        padding-left: 5px;
-        padding-right: 5px;
+        padding: 0 5px;
         border-radius: 0.5em;
-
         color: white;
         font-weight: bold;
         font-size: 1rem;
-        text-align: center;
-        background-color: var(--random-color);
         transition: transform 0.2s;
+        overflow: hidden; /* Ensure overflow is hidden */
+    }
+    li:hover {
+        transform: scale(1.1);
+    }
 
-        &:hover {
-            transform: scale(1.1);
-        }
-
+    li span {
+        display: inline-block;
+        max-width: 15ch; /* Limit the width to 15 characters */
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        text-align: center;
     }
     .not-ready {
         background-color: #e57373 !important;
