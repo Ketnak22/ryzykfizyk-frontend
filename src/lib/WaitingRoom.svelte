@@ -1,6 +1,6 @@
 <script lang="ts">
     import { socket } from "../socketStore";
-    import { users, allUsersReady } from "../usersStore";
+    import { users, gameState } from "../usersStore";
     import { currentRoom } from "../roomStore";
     import type { Question, User } from "../interfaces";
     
@@ -35,13 +35,11 @@
         findUser($socket.id)!.ready = true;
         $users = [...$users] // Force Svelte to rerender
     }
-
-    // TODO: Przenieść do App.svelte i usunąć z roomStore.ts
     // When all users are ready
     $socket.on("all-users-ready", () => {
-        // alert("All users are ready!");
-        $allUsersReady = true;
+        $gameState = "answering";
     })
+
 </script>
 
 <div class="waiting-room">
@@ -50,14 +48,17 @@
     </div>
 
     <div class="users-list">
-        <ol>
-            {#each $users as user}
-                <li class={user.ready ? "ready" : "not-ready"}>
-                    <span>{user.username}</span>
-                </li>
-            {/each}
-        </ol>
-
+        {#if $users.length == 0}
+            <p>No users in the room</p>
+        {:else}
+            <ol>
+                {#each $users as user}
+                    <li class={user.ready ? "ready" : "not-ready"}>
+                        <span>{user.username}</span>
+                    </li>
+                {/each}
+            </ol>
+        {/if}
     </div>
     {#each [findUser($socket.id)?.ready] as isReady}  
         <button onclick={setReady} disabled={isReady} class={isReady ? "disabled" : ""}>Ready</button>

@@ -3,4 +3,5 @@ import type { User } from "./interfaces";
 
 export const users = writable<User[]>([])
 
-export const allUsersReady = writable<boolean>(false)
+type GameState = "joining" | 'waiting' | 'answering' | 'voting' | 'finished';
+export const gameState = writable<GameState>('joining')

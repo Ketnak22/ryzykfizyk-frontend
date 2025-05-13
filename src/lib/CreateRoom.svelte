@@ -1,11 +1,13 @@
 <script lang="ts">
     import { currentRoom } from "../roomStore";
     import { socket } from "../socketStore";
+  import { gameState } from "../usersStore";
 
     function createRoom(username: string) {
         $socket.emit("create-room", username, (room: string) => {
-            // alert(`Created and joined room ${room}`);
+            console.log(`Created and joined room ${room}`);
             $currentRoom = room;
+            $gameState = "waiting";
         })
     }
 </script>

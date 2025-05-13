@@ -9,3 +9,8 @@ export interface Question {
   answer: number;
   unit: string;
 }
+
+export interface UserAnswer {
+  id: string;
+  answer: number;
+}
