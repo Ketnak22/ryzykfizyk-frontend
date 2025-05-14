@@ -61,7 +61,7 @@
         {/if}
     </div>
     {#each [findUser($socket.id)?.ready] as isReady}  
-        <button onclick={setReady} disabled={isReady} class={isReady ? "disabled" : ""}>Ready</button>
+        <button onclick={setReady} disabled={isReady} class={"btn green-btn" + " " + (isReady ? "disabled" : "")}>Ready</button>
     {/each}
 </div>
 
@@ -147,41 +147,11 @@
     .ready {
         background-color: #81c784 !important;
     }
-    /* 
-    li:nth-child(1n)  { background-color: #e57373; }
-    li:nth-child(2n)  { background-color: #64b5f6; }
-    li:nth-child(3n)  { background-color: #81c784; }
-    li:nth-child(4n)  { background-color: #ffd54f; }
-    li:nth-child(5n)  { background-color: #ba68c8; }
-    li:nth-child(6n)  { background-color: #4db6ac; } */
-
-    button {
-        background-color: #04AA6D;
-        border: none;
-        color: white;
-        display: inline-block;
-        padding: 20px 40px;
-        text-align: center;
-        text-decoration: none;
-        font-size: 16px;
-        margin: 10px 2px;
-        cursor: pointer;
-        border-radius: 0.5em;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        transition: background-color 0.3s ease;
-
-        position: absolute;
-        bottom: 3vh;
-        left: 50%;
-        transform: translateX(-50%);
-    }
-
-    button:hover {
-        background-color: #038E5B;
-    }
 
     .disabled {
-        background-color: gray;
+        background-color: gray !important;
+        pointer-events: none;
+
         pointer-events: none;
     }
 </style>

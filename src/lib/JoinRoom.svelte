@@ -16,12 +16,12 @@
   }
 </script>
 
-<div class="room-button">
-    <button on:click={() => {
+<div>
+    <button onclick={() => {
       const roomId = prompt("Enter room id: ");
       const username = prompt("Enter username: ")
       if (roomId !== null && username !== null) {
         joinRoom(roomId, username);
       }
-    }}>Join room</button>
+    }} class="btn green-btn">Join room</button>
 </div>

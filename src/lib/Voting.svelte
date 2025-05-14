@@ -4,10 +4,52 @@
     import { currentRoom } from "../roomStore";
     import type { Question, UserAnswer } from "../interfaces";
     
-    let anwsers: UserAnswer[] = [];
-    $socket.emit("get-user-answers", (r_anwsers: UserAnswer[]) => {
+    let tokens: number;
+    let anwsers = $state<UserAnswer[]>([]);
+    let votedAnswersIds = $state<string[]>([]);
+    $socket.emit("start-voting", (r_anwsers: UserAnswer[], r_tokens: number) => {
+        if (r_tokens === -1) {
+            alert("Something went wrong, please try again");
+            return;
+        }
+        tokens = r_tokens;
         anwsers = r_anwsers.sort((a, b) => a.answer - b.answer); // Sort answers by value 
     });
+
+    function selectVote(answer: UserAnswer) {
+        console.log("Tokens left: ", tokens);
+
+        if (tokens <= 0) {
+            alert("You have no tokens left");
+            return;
+        }
+
+        if (votedAnswersIds.includes(answer.id)) {
+            alert("You have already voted for this answer");
+            return;
+        }
+
+        votedAnswersIds.push(answer.id);
+       
+        $socket.emit("vote", answer.id, (successfull: boolean) => {
+            if (successfull) {
+                tokens--;
+            } else {
+                alert("Error sending vote");
+            }
+        });
+    }
+
+    function clearVotes() {
+        votedAnswersIds = [];
+        $socket.emit("clear-votes", (successfull: boolean, defaultUserTokens: number) => {
+            if (successfull) {
+                tokens = defaultUserTokens;
+            } else {
+                alert("Error clearing votes");
+            }
+        });
+    }
 </script>
 
 <div class="voting-div">
@@ -17,11 +59,16 @@
         <h2>Voting time!</h2>
         <ul>
             {#each anwsers as userAnswer}
-                <li>
-                    {userAnswer.answer} {userAnswer?.unit ?? ""}
+                {#each [votedAnswersIds.includes(userAnswer.id)] as alreadyVoted}
+                <li class={"answer " + (alreadyVoted ? "voted" : "not-voted")}>
+                    <button onclick={() => selectVote(userAnswer)} disabled={alreadyVoted}>
+                        {userAnswer.answer} {userAnswer?.unit ?? ""}
+                    </button>
                 </li>
+                {/each}
             {/each}
         </ul>
+        <button onclick={clearVotes} class="btn red-btn">Clear</button>
     {/if}
 </div>
 
@@ -53,7 +100,7 @@
         align-items: center;
     }
 
-    li {
+    .answer {
         color: black;
         margin: 10px 0;
         padding: 15px 20px;
@@ -64,5 +111,32 @@
         font-size: 18px;
         text-align: center;
 
+        transition: transform 0.2s;
+        overflow: hidden; /* Ensure overflow is hidden */
+
+        /* Remove style from button */
+        & button {
+            background-color: transparent;
+            border: none;
+            color: inherit;
+            font-size: inherit;
+            cursor: pointer;
+            padding: 0;
+            margin: 0;
+            text-align: center;
+            text-decoration: none;
+        }
     }
+
+    .answer:hover {
+        transform: scale(1.05);
+        cursor: pointer;
+    }
+
+    .voted {
+        background-color: #4caf50;
+        color: white;
+        border: 1px solid #4caf50;
+    }
+
 </style>

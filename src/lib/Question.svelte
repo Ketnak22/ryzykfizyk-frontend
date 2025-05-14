@@ -37,7 +37,7 @@
         {:else}
             <p>{currentQuestion}</p>
             <input bind:value={answer} type="text" name="answer" id="answer">
-            <button on:click={onAnswer}>Answer!</button>
+            <button onclick={onAnswer} class="btn green-btn">Answer!</button>
         {/if}
     {/if}
 </div>
@@ -87,27 +87,5 @@
         border-color: #04AA6D;
         box-shadow: 0 4px 8px rgba(0, 170, 109, 0.2);
         outline: none;
-    }
-
-    button {
-        background-color: #04AA6D;
-        border: none;
-        color: white;
-        display: inline-block;
-        padding: 20px 40px;
-        text-align: center;
-        text-decoration: none;
-        font-size: 16px;
-        margin: 10px 2px;
-        cursor: pointer;
-        border-radius: 0.5em;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        transition: background-color 0.3s ease;
-    }
-
-    button:hover {
-        background-color: #038E5B;
-    }
-
-    
+    } 
 </style>

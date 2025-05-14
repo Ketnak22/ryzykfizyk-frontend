@@ -13,10 +13,10 @@
 </script>
 
 <div class="room-button">
-    <button on:click={() => {
+    <button onclick={() => {
         const username = prompt("Enter username: ");
         if (username !== null) {
             createRoom(username);
         }
-    }}>Create room</button>
+    }} class="btn green-btn">Create room</button>
 </div>

@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 
-body, html {
+body,
+html {
     height: 100%;
     margin: 0;
 }
@@ -19,24 +20,33 @@ body {
     text-align: center;
 }
 
-.room-button {
-    & button {
-        background-color: #04AA6D;
-        border: none;
-        color: white;
-        display: inline-block;
-        padding: 20px 40px;
-        text-align: center;
-        text-decoration: none;
-        font-size: 16px;
-        margin: 10px 2px;
-        cursor: pointer;
-        border-radius: 0.5em;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        transition: background-color 0.3s ease;
-    }
+.btn {
+    border: none;
+    color: white;
+    display: inline-block;
+    padding: 20px 40px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    margin: 10px 2px;
+    cursor: pointer;
+    border-radius: 0.5em;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease;
+}
 
-    & button:hover {
+.green-btn {
+    background-color: #04AA6D;
+
+    &:hover {
         background-color: #038E5B;
+    }
+}
+
+.red-btn {
+    background-color: #e74c3c;
+
+    &:hover {
+        background-color: #c0392b;
     }
 }

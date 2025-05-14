@@ -12,8 +12,8 @@
     console.log(`Connected with id: ${$socket.id}`);
   })
 
-  $socket.on("connect_error", () => {
-    throw new Error("Error connecting to server!");
+  $socket.on("connect_error", (error) => {
+    throw new Error(`Error connecting to server: ${error}`);
   })
   
 </script>
