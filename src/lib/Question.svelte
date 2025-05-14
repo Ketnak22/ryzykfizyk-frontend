@@ -1,11 +1,8 @@
-<script lang="ts">
+ <script lang="ts">
     import { socket } from "../socketStore";
-    import { gameState, users } from "../usersStore";
-    import { currentRoom } from "../roomStore";
-    import type { Question, UserAnswer } from "../interfaces";
-  import { anwsers } from "../anwsersStore";
+    import { gameState } from "../usersStore";
 
-    let answer = 0;
+    let answer = "";
     let waiting = false;
 
     let currentQuestion: string | null;
@@ -19,12 +16,16 @@
     })
 
     function onAnswer() {
-        if (answer === 0) {
+        if (isNaN(Number(answer)) || String(answer).trim() === "") {
             alert("Please enter an answer");
             return;
         }
-        $socket.emit("send-answer", answer, () => {
-            waiting = true
+        $socket.emit("send-answer", answer, (successfull: boolean) => {
+            if (successfull) {
+                waiting = true
+            } else {
+                alert("Error sending answer");
+            }
         })
     }
 </script>
@@ -34,13 +35,79 @@
         {#if waiting}
             <p>Waiting for other players...</p>
         {:else}
-            <p>Question: {currentQuestion}</p>
-            <input bind:value={answer} type="number" name="answer" id="answer">
+            <p>{currentQuestion}</p>
+            <input bind:value={answer} type="text" name="answer" id="answer">
             <button on:click={onAnswer}>Answer!</button>
         {/if}
     {/if}
 </div>
 
 <style>
+    .question-div {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
 
+        background-color: #9c99e8;
+        border: none;
+        color: white;
+        padding: 20px 40px;
+        text-align: center;
+        text-decoration: none;
+        font-size: 16px;
+        border-radius: 0.5em;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        transition: background-color 0.3s ease;
+    }
+
+    p {
+        color: black;
+        margin: 10px 0;
+        padding: 15px 20px;
+        background-color: #f9f9f9;
+        border: 1px solid #ccc;
+        border-radius: 0.5em;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        font-size: 18px;
+        text-align: center;
+    }
+
+    input {
+        width: 200px;
+        padding: 10px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 0.5em;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    input:focus {
+        border-color: #04AA6D;
+        box-shadow: 0 4px 8px rgba(0, 170, 109, 0.2);
+        outline: none;
+    }
+
+    button {
+        background-color: #04AA6D;
+        border: none;
+        color: white;
+        display: inline-block;
+        padding: 20px 40px;
+        text-align: center;
+        text-decoration: none;
+        font-size: 16px;
+        margin: 10px 2px;
+        cursor: pointer;
+        border-radius: 0.5em;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+        background-color: #038E5B;
+    }
+
+    
 </style>

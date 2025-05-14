@@ -13,4 +13,5 @@ export interface Question {
 export interface UserAnswer {
   id: string;
   answer: number;
+  unit: string;
 }
