@@ -15,3 +15,8 @@ export interface UserAnswer {
   answer: number;
   unit: string;
 }
+
+export interface Response {
+  success: boolean;
+  message?: string;
+}
