@@ -60,56 +60,51 @@
             </ol>
         {/if}
     </div>
-    {#each [findUser($socket.id)?.ready] as isReady}  
-        <button onclick={setReady} disabled={isReady} class={"btn green-btn" + " " + (isReady ? "disabled" : "")}>Ready</button>
-    {/each}
+    <div class="ready-btn-container">
+        {#each [findUser($socket.id)?.ready] as isReady}  
+            <button onclick={setReady} disabled={isReady} class={"ready-btn btn green-btn" + " " + (isReady ? "disabled" : "")}>Ready</button>
+        {/each}
+    </div>
 </div>
 
 <style>
     .waiting-room {
+        background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);
+        border-radius: 1.2em;
+        box-shadow: 0 6px 24px rgba(80, 80, 120, 0.18);
+        padding: 36px 48px 32px 48px;
+        max-width: 900px;
+        margin: 40px auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        color: #222;
         position: relative;
-
-        width: 50vw;
-
-        background-color: #9c99e8;
-        border: none;
-        color: white;
-        display: inline-block;
+        min-height: 60vh;
         width: 75vw;
-        height: 75vh;
-        padding: 20px 40px;
-        text-align: center;
-        text-decoration: none;
-        font-size: 16px;
-        border-radius: 0.5em;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        transition: background-color 0.3s ease;
     }
 
     .room-info {
-        background-color: #74807b;
-        border: none;
-        color: white;
-        display: inline-block;
-        width: max-content;
-        padding: 20px 40px;
-        text-align: center;
-        text-decoration: none;
-        font-size: 16px;
-        margin: 10px 2px;
-        border-radius: 0.5em;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        transition: background-color 0.3s ease;
+        background: #4b3869;
+        color: #fff;
+        border-radius: 0.7em;
+        padding: 18px 38px;
+        font-size: 1.7rem;
+        font-weight: 700;
+        margin: 10px 0 24px 0;
+        box-shadow: 0 2px 8px rgba(120, 80, 180, 0.10);
+        letter-spacing: 1px;
     }
 
     .users-list {
-        margin-top: 50px;
+        margin-top: 30px;
+        width: 100%;
     }
     ol {
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
-        gap: 1rem;
+        gap: 1.2rem;
         list-style: none;
         padding: 0;
         margin: 0;
@@ -119,39 +114,90 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        height: 100px;
-        padding: 0 5px;
-        border-radius: 0.5em;
-        color: white;
-        font-weight: bold;
-        font-size: 1rem;
-        transition: transform 0.2s;
-        overflow: hidden; /* Ensure overflow is hidden */
+        min-width: 120px;
+        min-height: 60px;
+        padding: 0 18px;
+        border-radius: 0.7em;
+        color: #fff;
+        font-weight: 600;
+        font-size: 1.1rem;
+        background: #e57373;
+        box-shadow: 0 2px 8px rgba(120, 80, 180, 0.08);
+        transition: transform 0.2s, background 0.2s;
+        overflow: hidden;
     }
     li:hover {
-        transform: scale(1.1);
+        transform: scale(1.07);
+        z-index: 1;
     }
 
     li span {
         display: inline-block;
-        max-width: 15ch; /* Limit the width to 15 characters */
+        max-width: 15ch;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
         text-align: center;
     }
     .not-ready {
-        background-color: #e57373 !important;
+        background: #e57373 !important;
+        border: 2px solid #e57373;
     }
-
     .ready {
-        background-color: #81c784 !important;
+        background: #4caf50 !important;
+        border: 2px solid #388e3c;
+        color: #fff;
+        box-shadow: 0 2px 12px rgba(76, 175, 80, 0.13);
+    }
+    .disabled {
+        background-color: #bdbdbd !important;
+        pointer-events: none;
+        color: #fff;
+        opacity: 0.7;
+    }
+    .ready-btn {
+        background: #4caf50;
+        color: #fff;
+        border: none;
+        border-radius: 0.5em;
+        padding: 14px 36px;
+        font-size: 1.15rem;
+        font-weight: 700;
+        margin-top: 36px;
+        box-shadow: 0 2px 8px rgba(76, 175, 80, 0.13);
+        transition: background 0.2s, transform 0.2s;
+        cursor: pointer;
+    }
+    .ready-btn:hover:not(:disabled) {
+        background: #388e3c;
+        transform: scale(1.04);
     }
 
-    .disabled {
-        background-color: gray !important;
+    .ready-btn:disabled {
+        background-color: #bdbdbd !important;
         pointer-events: none;
-
-        pointer-events: none;
+        color: #fff;
+        opacity: 0.7;
+    }
+    p {
+        color: #4b3869;
+        font-size: 1.1rem;
+        font-weight: 600;
+        background: #fff;
+        border-radius: 0.5em;
+        padding: 15px 20px;
+        border: 1px solid #e0d7f3;
+        box-shadow: 0 2px 4px rgba(120, 80, 180, 0.07);
+        text-align: center;
+        margin: 0 auto 10px auto;
+        max-width: 400px;
+    }
+    .ready-btn-container {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        position: absolute;
+        left: 0;
+        bottom: 32px;
     }
 </style>

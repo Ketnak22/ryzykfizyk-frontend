@@ -8,6 +8,7 @@
   import Question from './lib/Question.svelte';
   import Voting from './lib/Voting.svelte';
   import VotingResults from './lib/VotingResults.svelte';
+  import PlayerRanking from './lib/PlayerRanking.svelte';
 
   $socket.on("connect", () => {
     console.log(`Connected with id: ${$socket.id}`);
@@ -31,6 +32,8 @@
     <Voting />
   {:else if $gameState === "showingResults"}
     <VotingResults />
+  {:else if $gameState === "showingRanking"}
+    <PlayerRanking />
   {/if}
 </main>
 
