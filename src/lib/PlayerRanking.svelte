@@ -2,15 +2,17 @@
     import { onMount } from "svelte";
     import { socket } from "../socketStore";
     import { users, gameState } from "../usersStore";
-    import type { User } from "../interfaces";
+    import type { User, Response } from "../interfaces";
+  import { anwsers } from "../anwsersStore";
 
     interface RankingUser {
         username: string;
         tokens: number;
     }
 
-    let playerRankings: RankingUser[] = [];
-    let loading = true;
+    let playerRankings = $state<RankingUser[]>([]);
+    let loading = $state(true);
+    let endOfGame = $state(false);
 
     onMount(() => {
         $socket.emit("get-player-rankings", (rankings: RankingUser[]) => {
@@ -22,13 +24,34 @@
     $socket.on("next-question", () => {
         $gameState = "answering";
     });
+
+    $socket.on("end-of-game", () => {
+        endOfGame = true;
+    });
+
+    // function startNewGame() {
+    //     anwsers.set([]);
+    //     users.update((u) => u.map(user => ({ ...user, ready: false })));
+    //     $socket.emit("start-new-game", (successfull: Response) => {
+    //         if (successfull.success) {
+    //             $gameState = "waiting";
+    //         } else {
+    //             alert("Error starting new game");
+    //         }
+    //     });
+    // }
+
+
+    function exit() {
+        window.location.reload();
+    }
 </script>
 
 <div class="player-ranking-card">
     {#if loading}
         <div class="loader">Loading...</div>
     {:else}
-        <h2 class="ranking-title">Player Rankings</h2>
+        <h2 class="ranking-title">{endOfGame ? "Final Rankings" : "Player Rankings"}</h2>
         <ul class="ranking-list">
             {#each playerRankings as user, index}
                 <li class="ranking-item{index === 0 ? ' first-place' : ''}{index === 1 ? ' second-place' : ''}{index === 2 ? ' third-place' : ''}">
@@ -45,6 +68,10 @@
                 </li>
             {/each}
         </ul>
+        {#if endOfGame}
+            <!-- <button onclick={startNewGame} class="btn green-btn new-game-btn">Start New Game</button> -->
+            <button onclick={exit} class="btn green-btn back-btn">Exit</button>
+        {/if}
     {/if}
 </div>
 

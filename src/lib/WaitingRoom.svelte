@@ -11,10 +11,7 @@
         return null
     }
 
-    // Update user list when new user joins
-    $socket.on("update-players-list", (usersList: User[]) => {
-        $users = usersList
-    })
+    
 
     // Remove user from list when they disconnect
     $socket.on("user-disconnected", (userId: string) => {

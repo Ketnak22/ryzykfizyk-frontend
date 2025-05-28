@@ -9,6 +9,7 @@
   import Voting from './lib/Voting.svelte';
   import VotingResults from './lib/VotingResults.svelte';
   import PlayerRanking from './lib/PlayerRanking.svelte';
+  import type { User } from './interfaces';
 
   $socket.on("connect", () => {
     console.log(`Connected with id: ${$socket.id}`);
@@ -17,7 +18,11 @@
   $socket.on("connect_error", (error) => {
     throw new Error(`Error connecting to server: ${error}`);
   })
-  
+
+  // Update user list when new user joins, or disconnects
+  $socket.on("update-players-list", (usersList: User[]) => {
+      $users = usersList
+  })
 </script>
 
 <main>
