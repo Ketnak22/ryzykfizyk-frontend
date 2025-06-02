@@ -2,7 +2,7 @@
     import { socket } from "../socketStore";
     import { users, gameState } from "../usersStore";
     import { currentRoom } from "../roomStore";
-    import type { Question, User } from "../interfaces";
+    import type { Response } from "../interfaces";
     
     function findUser(id: string | undefined)  {
         for (const user of $users) {
@@ -11,8 +11,6 @@
         return null
     }
 
-    
-
     // Remove user from list when they disconnect
     $socket.on("user-disconnected", (userId: string) => {
         $users = $users.filter(v => v.id !== userId)
@@ -20,6 +18,11 @@
 
     // Update user readyness in local list to 
     $socket.on("user-ready-update", (userId: string) => {
+        if (!findUser(userId)) {
+            console.warn(`User with id ${userId} not found in local list`);
+            return;
+        }
+
         findUser(userId)!.ready = true
         $users = [...$users] // Force Svelte to rerender
         console.log(`User ${userId} set to Ready`)
@@ -27,8 +30,13 @@
 
     // Set local user to ready
     function setReady() {
-        $socket.emit("user-ready")
-        // findUser($socket.id)!.ready = true
+        $socket.emit("user-ready", (response: Response) => {
+            if (!response.success) {
+                alert(`Failed to set ready status!\nReason: ${response.message}`);
+                return;
+            }
+            console.log("User set to Ready");
+        });
         findUser($socket.id)!.ready = true;
         $users = [...$users] // Force Svelte to rerender
     }
@@ -36,7 +44,6 @@
     $socket.on("all-users-ready", () => {
         $gameState = "answering";
     })
-
 </script>
 
 <div class="waiting-room">

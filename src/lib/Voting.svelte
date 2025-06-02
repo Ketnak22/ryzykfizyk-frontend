@@ -18,7 +18,12 @@
         let unit = "";
     // let anwsers = $state<UserAnswer[]>([]);
     let votedAnswers = $state<VotedAnswer[]>([]);
-    $socket.emit("start-voting", (r_anwsers: UserAnswer[], r_unit: string, r_tokens: number) => {
+    $socket.emit("start-voting", (response: Response, r_anwsers: UserAnswer[], r_unit: string, r_tokens: number) => {
+        if (!response.success) {
+            alert(`Failed to start voting!\nReason: ${response.message}`);
+            return;
+        }
+
         if (r_tokens === -1) {
             alert("Something went wrong, please try again");
             return;
@@ -55,6 +60,10 @@
         }
         const betValue = Number(bet);
 
+        if (betValue <= 0) {
+            alert("You must bet a positive amount of tokens");
+            return;
+        }
         if (betValue > tokens) {
             alert("You don't have enough tokens!");
             return;

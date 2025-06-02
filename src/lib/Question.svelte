@@ -1,6 +1,7 @@
 <script lang="ts">
     import { socket } from "../socketStore";
     import { gameState } from "../usersStore";
+    import type { Response } from "../interfaces";
 
     let answer = "";
     let waiting = false;
@@ -16,15 +17,15 @@
     })
 
     function onAnswer() {
-        if (isNaN(Number(answer)) || String(answer).trim() === "") {
+        if (isNaN(Number(answer)) || String(answer).trim() === "" || Number(answer) < 0) {
             alert("Please enter an answer");
             return;
         }
-        $socket.emit("send-answer", answer, (successfull: boolean) => {
-            if (successfull) {
+        $socket.emit("send-answer", answer, (response: Response) => {
+            if (response.success) {
                 waiting = true
             } else {
-                alert("Error sending answer");
+                alert(`Error sending answer\nReason: ${response.message}`);
             }
         })
     }
